@@ -1,0 +1,35 @@
+---
+import { locales, type Locale } from '../data/recipes/types';
+
+interface Props {
+  locale: Locale;
+  /** When on a recipe page: per-locale slugs of the same recipe. */
+  slugs?: Record<Locale, string>;
+}
+
+const { locale, slugs } = Astro.props;
+
+function hrefFor(l: Locale): string {
+  return slugs ? `/${l}/recipes/${slugs[l]}` : `/${l}`;
+}
+---
+
+<nav
+  aria-label="Language"
+  class="inline-flex overflow-hidden rounded-[10px] border-[1.5px] border-ink bg-surface"
+>
+  {
+    locales.map((l) => (
+      <a
+        href={hrefFor(l)}
+        aria-current={l === locale ? 'page' : undefined}
+        class:list={[
+          'px-[15px] py-[7px] text-[13px] font-semibold no-underline',
+          l === locale ? 'bg-ink text-bg' : 'text-ink hover:bg-accent-100',
+        ]}
+      >
+        {l.toUpperCase()}
+      </a>
+    ))
+  }
+</nav>

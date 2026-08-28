@@ -1,26 +1,97 @@
----                             
-import '../styles/global.css'   
---- 
-<!doctype html>
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro Basics</title>
-	</head>
-	<body>
-		<slot />
-	</body>
-</html>
+---
+import '../styles/global.css';
+import { locales, type Locale } from '../data/recipes/types';
+import { ui } from '../data/ui';
+import LanguageSwitcher from '../components/LanguageSwitcher.astro';
 
-<style>
-	html,
-	body {
-		margin: 0;
-		width: 100%;
-		height: 100%;
-	}
-</style>
+interface Props {
+  locale: Locale;
+  title: string;
+  /** Meta description; defaults to the localized tagline. */
+  description?: string;
+  /** Show the brand link on the left of the header (recipe pages). */
+  showBrand?: boolean;
+  /** Localized slugs of the current recipe, for locale-aware switching. */
+  slugs?: Record<Locale, string>;
+}
+
+const { locale, title, description, showBrand = false, slugs } = Astro.props;
+const metaDescription = description ?? ui[locale].tagline;
+
+/** Path of the current page in each locale (same content, other language). */
+const pathFor = (l: Locale) => (slugs ? `/${l}/recipes/${slugs[l]}` : `/${l}`);
+const canonical = new URL(pathFor(locale), Astro.site);
+const ogImage = new URL('/og-image.jpg', Astro.site);
+const ogLocales: Record<Locale, string> = { en: 'en_US', tr: 'tr_TR', es: 'es_ES' };
+const fullTitle = title ? `${title} · Rollercoaster Recipes` : 'Rollercoaster Recipes';
+---
+
+<!doctype html>
+<html lang={locale}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+    <link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <meta name="theme-color" content="#f9e9d1" />
+    <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="Rollercoaster" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="description" content={metaDescription} />
+    <title>{fullTitle}</title>
+
+    <link rel="canonical" href={canonical} />
+    {
+      locales.map((l) => (
+        <link rel="alternate" hreflang={l} href={new URL(pathFor(l), Astro.site)} />
+      ))
+    }
+    <link rel="alternate" hreflang="x-default" href={new URL('/en', Astro.site)} />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Rollercoaster Recipes" />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={metaDescription} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:locale" content={ogLocales[locale]} />
+    {locales.filter((l) => l !== locale).map((l) => <meta property="og:locale:alternate" content={ogLocales[l]} />)}
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={metaDescription} />
+    <meta name="twitter:image" content={ogImage} />
+    <slot name="head" />
+  </head>
+  <body class="min-h-screen">
+    <div class="mx-auto max-w-[1180px] px-[clamp(20px,5vw,56px)] pt-4 pb-[calc(35.2px*2)]">
+      <header class="no-print flex items-center justify-end gap-4 pt-2">
+        {
+          showBrand && (
+            <a href={`/${locale}`} class="mr-auto font-heading text-xl no-underline hover:underline">
+              Rollercoaster Recipes
+            </a>
+          )
+        }
+        <slot name="header" />
+        <LanguageSwitcher locale={locale} slugs={slugs} />
+      </header>
+      <main>
+        <slot />
+      </main>
+    </div>
+    <script>
+      // Service worker registration is prod-only: caching dev pages would
+      // fight Vite's HMR. On Netlify/any HTTPS host it registers and makes
+      // visited pages work offline.
+      if (import.meta.env.PROD && 'serviceWorker' in navigator) {
+        addEventListener('load', () => navigator.serviceWorker.register('/sw.js'));
+      }
+    </script>
+  </body>
+</html>

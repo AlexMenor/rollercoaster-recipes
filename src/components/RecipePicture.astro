@@ -1,0 +1,35 @@
+---
+import { Image } from 'astro:assets';
+
+interface Props {
+  image?: ImageMetadata;
+  title: string;
+  placeholderText: string;
+  class?: string;
+}
+
+const { image, title, placeholderText, class: className } = Astro.props;
+---
+
+{
+  image ? (
+    <Image
+      src={image}
+      alt={title}
+      widths={[340, 680, 1020, 1254]}
+      sizes="(min-width: 768px) 340px, 100vw"
+      quality="high"
+      class:list={['rounded-[14px] object-cover', className]}
+    />
+  ) : (
+    <div
+      aria-hidden="true"
+      class:list={[
+        'grid place-content-center rounded-[14px] bg-accent-2-100 p-4 text-center',
+        className,
+      ]}
+    >
+      <span class="font-heading text-lg text-ink/40">{placeholderText}</span>
+    </div>
+  )
+}

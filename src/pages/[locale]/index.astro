@@ -1,0 +1,92 @@
+---
+import { getImage, Image } from 'astro:assets';
+import Layout from '../../layouts/Layout.astro';
+import RecipeSearch from '../../components/RecipeSearch';
+import { recipes } from '../../data/recipes';
+import { locales, type Locale } from '../../data/recipes/types';
+import { ui } from '../../data/ui';
+import brandCats from '../../assets/brand-cats.png';
+
+export function getStaticPaths() {
+  return locales.map((locale) => ({ params: { locale } }));
+}
+
+const locale = Astro.params.locale as Locale;
+const t = ui[locale];
+
+const cards = await Promise.all(
+  recipes.map(async (r) => {
+    const image = r.picture
+      ? await getImage({
+          src: r.picture,
+          width: 300,
+        })
+      : undefined;
+
+    return {
+      href: `/${locale}/recipes/${r.translations[locale].slug}`,
+      title: r.translations[locale].title,
+      summary: r.translations[locale].indexSummary,
+      image: image
+        ? {
+            src: image.src,
+            width: 300,
+            height: Math.round((r.picture!.height / r.picture!.width) * 300),
+          }
+        : undefined,
+      origin: r.origin?.[locale],
+      prepTime: r.prepTime,
+      totalTime: r.totalTime,
+    };
+  }),
+);
+---
+
+<Layout locale={locale} title="">
+  <section
+    class="relative mx-[calc(50%-50vw)] grid items-center gap-[clamp(20px,3vw,56px)] py-6 md:grid-cols-[minmax(300px,48%)_minmax(0,1fr)]"
+  >
+    <Image
+      src={brandCats}
+      alt="Two cats riding a rollercoaster"
+      widths={[400, 600, 800, 1100, 1535]}
+      sizes="(min-width: 1180px) 540px, (min-width: 768px) 48vw, 100vw"
+      loading="eager"
+      fetchpriority="high"
+      class="block max-h-[440px] w-full object-contain object-left"
+    />
+    <div class="pr-[clamp(20px,5vw,56px)] pl-[clamp(20px,5vw,56px)] md:pl-0">
+      <h1 class="m-0 text-[clamp(46px,6.5vw,80px)] leading-[1.02] tracking-[-0.01em]">
+        <span class="block">Rollercoaster</span>
+        <span class="block text-accent">Recipes</span>
+      </h1>
+      <p class="mt-4 max-w-[46ch] text-[17px] text-ink/80">{t.tagline}</p>
+      <svg
+        viewBox="0 0 720 90"
+        width="min(520px,90%)"
+        class="mt-4 block"
+        aria-hidden="true"
+      >
+        <path
+          d="M4 70 C 110 -14, 220 128, 340 58 C 420 14, 540 16, 716 62"
+          fill="none"
+          stroke="var(--color-accent)"
+          stroke-width="4.5"
+          stroke-linecap="round"
+          stroke-dasharray="0.5 14"></path>
+        <circle cx="340" cy="58" r="9" fill="var(--color-accent-2)"></circle>
+        <circle cx="82" cy="22" r="6" fill="var(--color-accent)"></circle>
+      </svg>
+    </div>
+  </section>
+
+  <RecipeSearch
+    client:load
+    cards={cards}
+    searchPlaceholder={t.searchPlaceholder}
+    noResults={t.noResults}
+    minutes={t.minutes}
+    prep={t.prep}
+    total={t.total}
+  />
+</Layout>

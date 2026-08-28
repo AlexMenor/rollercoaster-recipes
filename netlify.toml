@@ -1,0 +1,28 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+# Server-side language redirect for the root URL, based on the visitor's
+# Accept-Language header. force=true is required because dist/index.html
+# exists; without it Netlify serves the static file instead of redirecting.
+# The client-side detection in src/pages/index.astro remains as a fallback
+# for non-Netlify serving (e.g. local preview).
+[[redirects]]
+  from = "/"
+  to = "/tr"
+  status = 302
+  force = true
+  conditions = { Language = ["tr"] }
+
+[[redirects]]
+  from = "/"
+  to = "/es"
+  status = 302
+  force = true
+  conditions = { Language = ["es"] }
+
+[[redirects]]
+  from = "/"
+  to = "/en"
+  status = 302
+  force = true

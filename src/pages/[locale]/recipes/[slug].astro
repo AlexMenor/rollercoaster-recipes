@@ -1,0 +1,138 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import IngredientList from '../../../components/IngredientList';
+import RecipePicture from '../../../components/RecipePicture.astro';
+import SpotifyEmbed from '../../../components/SpotifyEmbed.astro';
+import { recipes } from '../../../data/recipes';
+import { locales, type Locale, type Recipe } from '../../../data/recipes/types';
+import { ui } from '../../../data/ui';
+import { formatAmount } from '../../../lib/format';
+
+export function getStaticPaths() {
+  return locales.flatMap((locale) =>
+    recipes.map((recipe) => ({
+      params: { locale, slug: recipe.translations[locale].slug },
+      props: { recipe },
+    })),
+  );
+}
+
+const locale = Astro.params.locale as Locale;
+const { recipe } = Astro.props as { recipe: Recipe };
+const t = ui[locale];
+const tr = recipe.translations[locale];
+
+const slugs = Object.fromEntries(
+  locales.map((l) => [l, recipe.translations[l].slug]),
+) as Record<Locale, string>;
+
+const ingredientRows = recipe.ingredients.map((ing) => ({
+  amount: ing.amount,
+  unit: ing.unit,
+  optional: ing.optional,
+  group: ing.group?.[locale],
+  name: ing.name[locale],
+}));
+
+// schema.org/Recipe enables recipe rich results in search engines.
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Recipe',
+  name: tr.title,
+  description: tr.summary,
+  inLanguage: { en: 'en-US', tr: 'tr-TR', es: 'es-ES' }[locale],
+  datePublished: recipe.createdAt,
+  image: new URL('/og-image.jpg', Astro.site).href,
+  prepTime: `PT${recipe.prepTime}M`,
+  totalTime: `PT${recipe.totalTime}M`,
+  recipeYield: `${recipe.servings.default} servings`,
+  recipeCuisine: recipe.origin?.en,
+  recipeIngredient: recipe.ingredients.map(
+    (ing) => `${formatAmount(ing.amount, ing.unit, t.units)} ${ing.name[locale]}`,
+  ),
+  recipeInstructions: recipe.steps.map((step, i) => ({
+    '@type': 'HowToStep',
+    position: i + 1,
+    text: step.text[locale],
+  })),
+};
+---
+
+<Layout locale={locale} title={tr.title} description={tr.summary} showBrand slugs={slugs}>
+  <script slot="head" type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+  <div class="mt-4">
+    <a
+      href={`/${locale}`}
+      class="no-print mb-3 inline-flex items-center gap-2 font-heading text-sm text-accent-700 no-underline hover:underline"
+    >
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.75" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="19" y1="12" x2="5" y2="12"></line>
+        <polyline points="12 19 5 12 12 5"></polyline>
+      </svg>
+      {t.back}
+    </a>
+
+    <div class="relative overflow-hidden rounded-[20px] bg-ink p-8 text-bg">
+      <div class="pointer-events-none absolute -top-[90px] -right-[70px] h-[260px] w-[260px] rounded-full bg-accent-2 opacity-35"></div>
+      <div class="pointer-events-none absolute right-[150px] -bottom-[60px] h-[120px] w-[120px] rounded-full bg-accent opacity-40"></div>
+      <h1 class="relative m-0 mb-2 text-[clamp(34px,4.5vw,52px)] leading-[1.05]">{tr.title}</h1>
+      <p class="relative m-0 mb-4 max-w-[64ch] text-bg/80">{tr.summary}</p>
+      <div class="relative flex flex-wrap gap-2">
+        {recipe.origin && <span class="pill bg-accent-2 text-ink">{recipe.origin[locale]}</span>}
+        <span class="pill bg-accent text-white">{t.prep}: {recipe.prepTime} {t.minutes}</span>
+        <span class="pill border-[1.5px] border-bg/55 text-bg">
+          {t.total}: {recipe.totalTime} {t.minutes}
+        </span>
+      </div>
+    </div>
+
+    <div class="mt-6 grid gap-6 md:grid-cols-[minmax(0,1fr)_minmax(280px,340px)]">
+      <IngredientList
+        client:load
+        ingredients={ingredientRows}
+        servings={recipe.servings}
+        labels={{ heading: t.ingredients, servings: t.servings, optional: t.optional, units: t.units }}
+      />
+      <div class="flex flex-col gap-4">
+        <RecipePicture
+          image={recipe.picture}
+          title={tr.title}
+          placeholderText={t.photoPlaceholder}
+          class="h-[280px] w-full"
+        />
+        {recipe.spotifyTrackId && <SpotifyEmbed trackId={recipe.spotifyTrackId} label={t.songLabel} />}
+      </div>
+    </div>
+
+    <div class="mt-10">
+      <h2 class="m-0 mb-6 font-heading text-3xl">{t.steps}</h2>
+      <div class="flex flex-col gap-4">
+        {
+          recipe.steps.map((step, i) => (
+            <div
+              class:list={[
+                'grid items-stretch gap-4',
+                step.photo ? 'md:grid-cols-[minmax(0,1fr)_230px]' : '',
+              ]}
+            >
+              <div class="flex items-start gap-4 rounded-2xl bg-surface px-6 py-4 shadow-elev-sm">
+                <span class="grid h-11 w-11 flex-none place-content-center rounded-full bg-accent-2 font-heading text-xl text-ink">
+                  {i + 1}
+                </span>
+                <p class="m-0 mt-1.5 text-[15.5px] leading-[1.65]">{step.text[locale]}</p>
+              </div>
+              {step.photo && (
+                <RecipePicture
+                  image={step.photo}
+                  title={`${t.stepPhoto} ${i + 1}`}
+                  placeholderText={t.stepPhoto}
+                  class="h-full min-h-[130px] w-full"
+                />
+              )}
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+</Layout>

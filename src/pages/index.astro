@@ -1,11 +1,51 @@
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
-
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+// Landing page: Netlify 302-redirects / to the right locale in production
+// (see netlify.toml). This page is only ever seen in local dev or on static
+// hosts without redirect support; keep it a plain, no-JS language picker.
 ---
 
-<Layout>
-	<Welcome />
-</Layout>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="robots" content="noindex" />
+    <title>Rollercoaster Recipes</title>
+    <style>
+      html {
+        background: #f9e9d1;
+        color: #1e144b;
+      }
+      body {
+        min-height: 100vh;
+        margin: 0;
+        display: grid;
+        place-content: center;
+        gap: 16px;
+        text-align: center;
+        font-family: system-ui, sans-serif;
+      }
+      h1 {
+        margin: 0;
+        font-size: 28px;
+      }
+      nav {
+        display: flex;
+        gap: 16px;
+        justify-content: center;
+      }
+      a {
+        color: #9c4306;
+        font-weight: 600;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Rollercoaster Recipes</h1>
+    <nav>
+      <a href="/en">English</a>
+      <a href="/tr">Türkçe</a>
+      <a href="/es">Español</a>
+    </nav>
+  </body>
+</html>
