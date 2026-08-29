@@ -1,6 +1,8 @@
 import type { Locale, Unit } from './recipes/types';
 
 export interface UiStrings {
+  language: string;
+  recipes: string;
   tagline: string;
   searchPlaceholder: string;
   servings: string;
@@ -22,6 +24,8 @@ export interface UiStrings {
 
 export const ui: Record<Locale, UiStrings> = {
   en: {
+    language: 'Language',
+    recipes: 'Recipes',
     tagline:
       'Recipes with ups, downs, and a soundtrack. Every dish comes with its own song. Press play and cook along.',
     searchPlaceholder: 'Search recipes…',
@@ -51,6 +55,8 @@ export const ui: Record<Locale, UiStrings> = {
     },
   },
   tr: {
+    language: 'Dil',
+    recipes: 'Tarifler',
     tagline:
       'İnişli çıkışlı, müzikli tarifler. Her yemeğin kendi şarkısı var. Çal ve pişirmeye başla.',
     searchPlaceholder: 'Tarif ara…',
@@ -80,6 +86,8 @@ export const ui: Record<Locale, UiStrings> = {
     },
   },
   es: {
+    language: 'Idioma',
+    recipes: 'Recetas',
     tagline:
       'Recetas con subidas, bajadas y banda sonora. Cada plato tiene su propia canción. Dale al play y cocina.',
     searchPlaceholder: 'Buscar recetas…',

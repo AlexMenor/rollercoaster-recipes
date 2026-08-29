@@ -1,4 +1,5 @@
 ---
+import { getImage } from 'astro:assets';
 import Layout from '../../../layouts/Layout.astro';
 import IngredientList from '../../../components/IngredientList';
 import RecipePicture from '../../../components/RecipePicture.astro';
@@ -21,6 +22,18 @@ const locale = Astro.params.locale as Locale;
 const { recipe } = Astro.props as { recipe: Recipe };
 const t = ui[locale];
 const tr = recipe.translations[locale];
+const socialImage = recipe.picture
+  ? await getImage({
+      src: recipe.picture,
+      width: 1200,
+      height: 630,
+      fit: 'cover',
+      position: 'center',
+      format: 'jpg',
+      quality: 'high',
+    })
+  : undefined;
+const socialImageUrl = new URL(socialImage?.src ?? '/og-image.jpg', Astro.site).href;
 
 const slugs = Object.fromEntries(
   locales.map((l) => [l, recipe.translations[l].slug]),
@@ -42,7 +55,7 @@ const jsonLd = {
   description: tr.summary,
   inLanguage: { en: 'en-US', tr: 'tr-TR', es: 'es-ES' }[locale],
   datePublished: recipe.createdAt,
-  image: new URL('/og-image.jpg', Astro.site).href,
+  image: socialImageUrl,
   prepTime: `PT${recipe.prepTime}M`,
   totalTime: `PT${recipe.totalTime}M`,
   recipeYield: `${recipe.servings.default} servings`,
@@ -58,7 +71,14 @@ const jsonLd = {
 };
 ---
 
-<Layout locale={locale} title={tr.title} description={tr.summary} showBrand slugs={slugs}>
+<Layout
+  locale={locale}
+  title={tr.title}
+  description={tr.summary}
+  socialImage={socialImage?.src}
+  showBrand
+  slugs={slugs}
+>
   <script slot="head" type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
   <div class="mt-4">
     <a
@@ -87,21 +107,27 @@ const jsonLd = {
     </div>
 
     <div class="mt-6 grid gap-6 md:grid-cols-[minmax(0,1fr)_minmax(280px,340px)]">
-      <IngredientList
-        client:load
-        ingredients={ingredientRows}
-        servings={recipe.servings}
-        labels={{ heading: t.ingredients, servings: t.servings, optional: t.optional, units: t.units }}
-      />
-      <div class="flex flex-col gap-4">
+      <div class="md:col-start-2 md:row-start-1">
         <RecipePicture
           image={recipe.picture}
           title={tr.title}
           placeholderText={t.photoPlaceholder}
           class="h-[280px] w-full"
         />
-        {recipe.spotifyTrackId && <SpotifyEmbed trackId={recipe.spotifyTrackId} label={t.songLabel} />}
       </div>
+      <div class="md:col-start-1 md:row-start-1">
+        <IngredientList
+          client:load
+          ingredients={ingredientRows}
+          servings={recipe.servings}
+          labels={{ heading: t.ingredients, servings: t.servings, optional: t.optional, units: t.units }}
+        />
+      </div>
+      {recipe.spotifyTrackId && (
+        <div class="md:col-start-2 md:row-start-2">
+          <SpotifyEmbed trackId={recipe.spotifyTrackId} label={t.songLabel} />
+        </div>
+      )}
     </div>
 
     <div class="mt-10">

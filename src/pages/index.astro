@@ -1,7 +1,6 @@
 ---
-// Landing page: Netlify 302-redirects / to the right locale in production
-// (see netlify.toml). This page is only ever seen in local dev or on static
-// hosts without redirect support; keep it a plain, no-JS language picker.
+// Netlify redirects / before this page is served. This small client-side
+// fallback keeps local and non-Netlify hosts consistent.
 ---
 
 <!doctype html>
@@ -11,6 +10,16 @@
     <meta name="viewport" content="width=device-width" />
     <meta name="robots" content="noindex" />
     <title>Rollercoaster Recipes</title>
+    <script>
+      const supportedLocales = ['en', 'tr', 'es'];
+      const savedLocale = document.cookie.match(/(?:^|;\\s*)rr_locale=(en|tr|es)(?:;|$)/)?.[1];
+
+      const browserLocale = navigator.languages
+        .map((language) => language.split('-')[0])
+        .find((language) => supportedLocales.includes(language));
+      const locale = supportedLocales.includes(savedLocale ?? '') ? savedLocale : browserLocale ?? 'en';
+      location.replace(`/${locale}`);
+    </script>
     <style>
       html {
         background: #f9e9d1;
@@ -42,10 +51,19 @@
   </head>
   <body>
     <h1>Rollercoaster Recipes</h1>
-    <nav>
-      <a href="/en">English</a>
-      <a href="/tr">Türkçe</a>
-      <a href="/es">Español</a>
+    <nav data-language-picker>
+      <a href="/en" data-locale="en">English</a>
+      <a href="/tr" data-locale="tr">Türkçe</a>
+      <a href="/es" data-locale="es">Español</a>
     </nav>
+    <script>
+      document.querySelectorAll<HTMLAnchorElement>('[data-language-picker] a[data-locale]').forEach((link) => {
+        link.addEventListener('click', () => {
+          const locale = link.dataset.locale ?? 'en';
+          const secure = location.protocol === 'https:' ? '; Secure' : '';
+          document.cookie = `rr_locale=${locale}; Path=/; Max-Age=31536000; SameSite=Lax${secure}`;
+        });
+      });
+    </script>
   </body>
 </html>

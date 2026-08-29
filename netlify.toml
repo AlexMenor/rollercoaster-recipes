@@ -2,11 +2,8 @@
   command = "npm run build"
   publish = "dist"
 
-# Server-side language redirect for the root URL, based on the visitor's
-# Accept-Language header. force=true is required because dist/index.html
-# exists; without it Netlify serves the static file instead of redirecting.
-# The client-side detection in src/pages/index.astro remains as a fallback
-# for non-Netlify serving (e.g. local preview).
+# An explicit language choice is handled by the Edge Function first. These
+# redirects provide the browser-language fallback when no preference exists.
 [[redirects]]
   from = "/"
   to = "/tr"

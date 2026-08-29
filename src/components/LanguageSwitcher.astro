@@ -1,5 +1,6 @@
 ---
 import { locales, type Locale } from '../data/recipes/types';
+import { ui } from '../data/ui';
 
 interface Props {
   locale: Locale;
@@ -8,28 +9,43 @@ interface Props {
 }
 
 const { locale, slugs } = Astro.props;
+const t = ui[locale];
 
 function hrefFor(l: Locale): string {
   return slugs ? `/${l}/recipes/${slugs[l]}` : `/${l}`;
 }
 ---
 
-<nav
-  aria-label="Language"
-  class="inline-flex overflow-hidden rounded-[10px] border-[1.5px] border-ink bg-surface"
->
-  {
-    locales.map((l) => (
-      <a
-        href={hrefFor(l)}
-        aria-current={l === locale ? 'page' : undefined}
-        class:list={[
-          'px-[15px] py-[7px] text-[13px] font-semibold no-underline',
-          l === locale ? 'bg-ink text-bg' : 'text-ink hover:bg-accent-100',
-        ]}
-      >
-        {l.toUpperCase()}
-      </a>
-    ))
-  }
-</nav>
+<div data-language-switcher>
+  <nav
+    aria-label={t.language}
+    class="inline-flex overflow-hidden rounded-[10px] border-[1.5px] border-ink bg-surface"
+  >
+    {
+      locales.map((l) => (
+        <a
+          href={hrefFor(l)}
+          data-locale={l}
+          aria-current={l === locale ? 'page' : undefined}
+          class:list={[
+            'px-[15px] py-[7px] text-[13px] font-semibold no-underline',
+            l === locale ? 'bg-ink text-bg' : 'text-ink hover:bg-accent-100',
+          ]}
+        >
+          {l.toUpperCase()}
+        </a>
+      ))
+    }
+  </nav>
+</div>
+
+<script>
+  const preferredLocaleCookie = 'rr_locale';
+  document.querySelectorAll<HTMLAnchorElement>('[data-language-switcher] a[data-locale]').forEach((link) => {
+    link.addEventListener('click', () => {
+      const locale = link.dataset.locale ?? 'en';
+      const secure = location.protocol === 'https:' ? '; Secure' : '';
+      document.cookie = `${preferredLocaleCookie}=${locale}; Path=/; Max-Age=31536000; SameSite=Lax${secure}`;
+    });
+  });
+</script>

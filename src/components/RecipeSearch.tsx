@@ -17,6 +17,7 @@ interface Props {
   minutes: string;
   prep: string;
   total: string;
+  recipeHeading: string;
 }
 
 /** Substring match scores 2, subsequence (fuzzy) match scores 1, otherwise 0. */
@@ -34,7 +35,7 @@ function matchScore(text: string, q: string): number {
   return 1;
 }
 
-export default function RecipeSearch({ cards, searchPlaceholder, noResults, minutes, prep, total }: Props) {
+export default function RecipeSearch({ cards, searchPlaceholder, noResults, minutes, prep, total, recipeHeading }: Props) {
   const [query, setQuery] = useState('');
 
   const results = useMemo(() => {
@@ -76,10 +77,12 @@ export default function RecipeSearch({ cards, searchPlaceholder, noResults, minu
         />
       </div>
 
+      <h2 className="mb-2 mt-8 font-heading text-xl text-ink/75">{recipeHeading}</h2>
+
       {results.length === 0 ? (
         <p className="py-14 text-center opacity-70">{noResults}</p>
       ) : (
-        <div className="mt-6 grid grid-cols-[repeat(auto-fit,minmax(min(420px,100%),1fr))] gap-4">
+        <div className="mt-3 grid grid-cols-[repeat(auto-fit,minmax(min(420px,100%),1fr))] gap-4">
           {results.map((card) => (
             <a
               key={card.href}

@@ -13,15 +13,19 @@ interface Props {
   showBrand?: boolean;
   /** Localized slugs of the current recipe, for locale-aware switching. */
   slugs?: Record<Locale, string>;
+  /** Optimized, recipe-specific image URL for social cards and structured data. */
+  socialImage?: string;
 }
 
-const { locale, title, description, showBrand = false, slugs } = Astro.props;
+const { locale, title, description, showBrand = false, slugs, socialImage } = Astro.props;
 const metaDescription = description ?? ui[locale].tagline;
 
 /** Path of the current page in each locale (same content, other language). */
 const pathFor = (l: Locale) => (slugs ? `/${l}/recipes/${slugs[l]}` : `/${l}`);
 const canonical = new URL(pathFor(locale), Astro.site);
-const ogImage = new URL('/og-image.jpg', Astro.site);
+const defaultLocaleUrl = new URL(pathFor('en'), Astro.site);
+const ogImage = new URL(socialImage ?? '/og-image.jpg', Astro.site);
+const socialImageAlt = title || 'Rollercoaster Recipes';
 const ogLocales: Record<Locale, string> = { en: 'en_US', tr: 'tr_TR', es: 'es_ES' };
 const fullTitle = title ? `${title} · Rollercoaster Recipes` : 'Rollercoaster Recipes';
 ---
@@ -49,7 +53,7 @@ const fullTitle = title ? `${title} · Rollercoaster Recipes` : 'Rollercoaster R
         <link rel="alternate" hreflang={l} href={new URL(pathFor(l), Astro.site)} />
       ))
     }
-    <link rel="alternate" hreflang="x-default" href={new URL('/en', Astro.site)} />
+    <link rel="alternate" hreflang="x-default" href={defaultLocaleUrl} />
 
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Rollercoaster Recipes" />
@@ -59,6 +63,7 @@ const fullTitle = title ? `${title} · Rollercoaster Recipes` : 'Rollercoaster R
     <meta property="og:image" content={ogImage} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={socialImageAlt} />
     <meta property="og:locale" content={ogLocales[locale]} />
     {locales.filter((l) => l !== locale).map((l) => <meta property="og:locale:alternate" content={ogLocales[l]} />)}
 
@@ -66,6 +71,7 @@ const fullTitle = title ? `${title} · Rollercoaster Recipes` : 'Rollercoaster R
     <meta name="twitter:title" content={fullTitle} />
     <meta name="twitter:description" content={metaDescription} />
     <meta name="twitter:image" content={ogImage} />
+    <meta name="twitter:image:alt" content={socialImageAlt} />
     <slot name="head" />
   </head>
   <body class="min-h-screen">
