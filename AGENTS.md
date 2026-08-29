@@ -19,7 +19,7 @@ Do not use em dashes or en dashes. Use commas, parentheses, colons, or regular h
 - Recipe-detail images must use a responsive `srcset` with a 2x-size option for Retina screens and high image quality.
 - Recipe-detail pages derive their 1200 × 630 social image from the same `picture` asset. Use that optimized image for Open Graph, Twitter, and Recipe JSON-LD, never a separate social source image.
 - When generating or editing a food illustration, preserve the existing composition unless the request says otherwise. Inspect the generated result before replacing the shared source asset.
-- Keep recipe thumbnails stylistically consistent: square, slightly top-down food illustrations in a handmade gouache-and-crayon style, with visible paper grain, warm cream backgrounds, a navy ceramic bowl or plate, and sparse navy and golden brush marks. Use bright, appetizing colors, no text, no logos, and no photorealism.
+- Keep recipe thumbnails stylistically consistent: square, strict orthographic overhead food illustrations in a handmade gouache-and-crayon style, with visible paper grain and warm cream backgrounds. Center the circular bowl or plate at a consistent scale, with its outer edge around 84% of the canvas and roughly 8% clear margin on every side. Choose a different ceramic color for each recipe that complements or contrasts well with the food, and carry that palette into the sparse decorative brush marks. Review the existing recipe gallery before choosing a color so the collection does not default to navy or become visually repetitive. Use bright, appetizing colors, no text, no logos, and no photorealism.
 
 ## Recipe localization
 
