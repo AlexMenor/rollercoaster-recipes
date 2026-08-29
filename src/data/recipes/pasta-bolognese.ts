@@ -9,6 +9,7 @@ const recipe: Recipe = {
   origin: { en: 'Italy', tr: 'İtalya', es: 'Italia' },
   picture,
   servings: { default: 2, min: 1, max: 6 },
+  spotifyTrackId: '7037bX3jdaUWUAXL12CHGy',
   ingredients: [
     {
       amount: 220,
