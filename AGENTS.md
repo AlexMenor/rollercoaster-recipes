@@ -1,3 +1,7 @@
+## Recipe workflow
+
+For recipe additions or recipe-content/image updates, use the repository skill at [`.agents/skills/recipe-workflow/SKILL.md`](.agents/skills/recipe-workflow/SKILL.md).
+
 ## Development
 
 When starting the dev server, use background mode:
