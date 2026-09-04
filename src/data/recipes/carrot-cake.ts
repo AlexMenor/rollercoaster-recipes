@@ -8,6 +8,7 @@ const recipe: Recipe = {
   totalTime: 110,
   picture,
   servings: { default: 8, min: 4, max: 16 },
+  spotifyTrackId: '5bGMMNxjvlledmzq9dItvf',
   ingredients: [
     {
       amount: 2,

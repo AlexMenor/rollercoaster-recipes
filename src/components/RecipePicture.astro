@@ -6,9 +6,16 @@ interface Props {
   title: string;
   placeholderText: string;
   class?: string;
+  sizes?: string;
 }
 
-const { image, title, placeholderText, class: className } = Astro.props;
+const {
+  image,
+  title,
+  placeholderText,
+  class: className,
+  sizes = '(min-width: 768px) 340px, 100vw',
+} = Astro.props;
 ---
 
 {
@@ -16,16 +23,16 @@ const { image, title, placeholderText, class: className } = Astro.props;
     <Image
       src={image}
       alt={title}
-      widths={[340, 680, 1020, 1254]}
-      sizes="(min-width: 768px) 340px, 100vw"
+      widths={[230, 340, 460, 680, 920, 1254]}
+      sizes={sizes}
       quality="high"
-      class:list={['rounded-[14px] object-cover', className]}
+      class:list={['block rounded-lg object-contain', className]}
     />
   ) : (
     <div
       aria-hidden="true"
       class:list={[
-        'grid place-content-center rounded-[14px] bg-accent-2-100 p-4 text-center',
+        'grid place-content-center rounded-lg bg-accent-2-100 p-4 text-center',
         className,
       ]}
     >

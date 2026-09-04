@@ -7,10 +7,12 @@ interface Props {
 const { trackId, label } = Astro.props;
 ---
 
-<div class="rounded-2xl bg-ink p-4 text-bg shadow-elev-sm">
-  <h3 class="mb-2 font-heading text-base text-accent-2">{label}</h3>
+<div>
+  <h3 class="relative z-10 mb-[-5px] ml-3 inline-block rounded-t-lg bg-accent px-3 pt-1.5 pb-[9px] font-heading text-sm text-white">
+    {label}
+  </h3>
   <iframe
-    class="block w-full rounded-[14px]"
+    class="relative z-0 block w-full rounded-lg"
     src={`https://open.spotify.com/embed/track/${trackId}?utm_source=generator&theme=0`}
     width="100%"
     height="152"

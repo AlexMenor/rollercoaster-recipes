@@ -92,30 +92,32 @@ const jsonLd = {
       {t.back}
     </a>
 
-    <div class="relative overflow-hidden rounded-[20px] bg-ink p-8 text-bg">
-      <div class="pointer-events-none absolute -top-[90px] -right-[70px] h-[260px] w-[260px] rounded-full bg-accent-2 opacity-35"></div>
-      <div class="pointer-events-none absolute right-[150px] -bottom-[60px] h-[120px] w-[120px] rounded-full bg-accent opacity-40"></div>
-      <h1 class="relative m-0 mb-2 text-[clamp(34px,4.5vw,52px)] leading-[1.05]">{tr.title}</h1>
-      <p class="relative m-0 mb-4 max-w-[64ch] text-bg/80">{tr.summary}</p>
-      <div class="relative flex flex-wrap gap-2">
-        {recipe.origin && <span class="pill bg-accent-2 text-ink">{recipe.origin[locale]}</span>}
-        <span class="pill bg-accent text-white">{t.prep}: {recipe.prepTime} {t.minutes}</span>
-        <span class="pill border-[1.5px] border-bg/55 text-bg">
-          {t.total}: {recipe.totalTime} {t.minutes}
-        </span>
+    <div class="grid items-start gap-6 py-6 md:grid-cols-[minmax(0,1fr)_minmax(280px,340px)]">
+      <div>
+        <h1 class="m-0 mb-2 text-[clamp(34px,4.5vw,52px)] leading-[1.05]">{tr.title}</h1>
+        <p class="m-0 mb-4 max-w-[64ch] text-ink/75">{tr.summary}</p>
+        <div class="flex flex-wrap gap-2">
+          {recipe.origin && <span class="pill bg-accent-2 text-ink">{recipe.origin[locale]}</span>}
+          <span class="pill border-[1.5px] border-ink text-ink">{t.prep}: {recipe.prepTime} {t.minutes}</span>
+          <span class="pill border-[1.5px] border-ink/55 text-ink">
+            {t.total}: {recipe.totalTime} {t.minutes}
+          </span>
+        </div>
       </div>
+      {recipe.spotifyTrackId && <SpotifyEmbed trackId={recipe.spotifyTrackId} label={t.songLabel} />}
     </div>
 
-    <div class="mt-6 grid gap-6 md:grid-cols-[minmax(0,1fr)_minmax(280px,340px)]">
-      <div class="md:col-start-2 md:row-start-1">
+    <div class="mt-6 grid items-start gap-6 md:grid-cols-2">
+      <div class="min-h-[280px] md:col-start-1 md:row-start-1 md:h-full">
         <RecipePicture
           image={recipe.picture}
           title={tr.title}
           placeholderText={t.photoPlaceholder}
-          class="h-[280px] w-full"
+          sizes="(min-width: 1180px) 522px, (min-width: 768px) 50vw, 100vw"
+          class="w-full object-top mix-blend-darken md:h-full"
         />
       </div>
-      <div class="md:col-start-1 md:row-start-1">
+      <div class="md:col-start-2 md:row-start-1">
         <IngredientList
           client:load
           ingredients={ingredientRows}
@@ -123,11 +125,6 @@ const jsonLd = {
           labels={{ heading: t.ingredients, servings: t.servings, optional: t.optional, units: t.units }}
         />
       </div>
-      {recipe.spotifyTrackId && (
-        <div class="md:col-start-2 md:row-start-2">
-          <SpotifyEmbed trackId={recipe.spotifyTrackId} label={t.songLabel} />
-        </div>
-      )}
     </div>
 
     <div class="mt-10">
@@ -141,20 +138,23 @@ const jsonLd = {
                 step.photo ? 'md:grid-cols-[minmax(0,1fr)_230px]' : '',
               ]}
             >
-              <div class="flex items-start gap-4 rounded-2xl bg-surface px-6 py-4 shadow-elev-sm">
-                <span class="grid h-11 w-11 flex-none place-content-center rounded-full bg-accent-2 font-heading text-xl text-ink">
+              <div class="flex items-baseline gap-4 rounded-lg bg-surface px-6 py-4 shadow-elev-sm">
+                <span class="min-w-6 flex-none font-heading text-xl leading-[1.65] text-ink">
                   {i + 1}
                 </span>
-                <p class="m-0 mt-1.5 text-[15.5px] leading-[1.65]">{step.text[locale]}</p>
+                <p class="m-0 text-[15.5px] leading-[1.65]">{step.text[locale]}</p>
               </div>
-              {step.photo && (
-                <RecipePicture
-                  image={step.photo}
-                  title={`${t.stepPhoto} ${i + 1}`}
-                  placeholderText={t.stepPhoto}
-                  class="h-full min-h-[130px] w-full"
-                />
-              )}
+              {
+                step.photo && (
+                  <RecipePicture
+                    image={step.photo}
+                    title={`${t.stepPhoto} ${i + 1}`}
+                    placeholderText={t.stepPhoto}
+                    sizes="(min-width: 768px) 230px, 100vw"
+                    class="h-full min-h-[130px] w-full"
+                  />
+                )
+              }
             </div>
           ))
         }
