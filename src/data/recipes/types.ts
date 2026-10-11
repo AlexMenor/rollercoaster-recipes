@@ -49,8 +49,12 @@ export interface Recipe {
   cooking?: CookingInfo;
   origin?: Localized<string>;
   picture?: ImageMetadata;
+  /** Optional white detail-image panel instead of blending with the page. */
+  pictureBackground?: 'white';
   servings: { default: number; min: number; max: number };
   spotifyTrackId?: string;
+  /** Recipe ids suggested as accompaniments, linked in the current locale. */
+  pairsWith?: string[];
   ingredients: Ingredient[];
   steps: Step[];
   translations: Record<

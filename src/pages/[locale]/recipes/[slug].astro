@@ -1,5 +1,5 @@
 ---
-import { getImage } from 'astro:assets';
+import { Image, getImage } from 'astro:assets';
 import Layout from '../../../layouts/Layout.astro';
 import IngredientList from '../../../components/IngredientList';
 import RecipePicture from '../../../components/RecipePicture.astro';
@@ -23,6 +23,9 @@ const locale = Astro.params.locale as Locale;
 const { recipe } = Astro.props as { recipe: Recipe };
 const t = ui[locale];
 const tr = recipe.translations[locale];
+const pairedRecipes = (recipe.pairsWith ?? [])
+  .map((id) => recipes.find((candidate) => candidate.id === id))
+  .filter((candidate): candidate is Recipe => candidate !== undefined);
 const socialImage = recipe.picture
   ? await getImage({
       src: recipe.picture,
@@ -116,7 +119,7 @@ const jsonLd = {
           title={tr.title}
           placeholderText={t.photoPlaceholder}
           sizes="(min-width: 1180px) 522px, (min-width: 768px) 50vw, 100vw"
-          class="w-full object-top mix-blend-darken md:h-full"
+          class={`w-full object-top md:h-full ${recipe.pictureBackground === 'white' ? 'bg-white' : 'mix-blend-darken'}`}
         />
       </div>
       <div class="flex min-w-0 flex-col gap-6 md:col-start-2 md:row-start-1">
@@ -129,6 +132,40 @@ const jsonLd = {
         />
       </div>
     </div>
+
+    {pairedRecipes.length > 0 && (
+      <aside class="mt-8 rounded-lg bg-surface p-6 shadow-elev-sm" aria-labelledby="recipe-pairings">
+        <h2 id="recipe-pairings" class="m-0 mb-3 font-heading text-[26px]">{t.pairsWith}</h2>
+        <ul class="m-0 flex list-none flex-col gap-3 p-0">
+          {pairedRecipes.map((pairedRecipe) => (
+            <li>
+              <a
+                href={`/${locale}/recipes/${pairedRecipe.translations[locale].slug}`}
+                class="flex items-center gap-4 text-accent-700 no-underline hover:text-ink"
+              >
+                {pairedRecipe.picture && (
+                  <Image
+                    src={pairedRecipe.picture}
+                    alt=""
+                    width={144}
+                    height={144}
+                    widths={[96, 144, 192, 288]}
+                    sizes="(min-width: 640px) 144px, 96px"
+                    format="webp"
+                    quality="high"
+                    class="h-24 w-24 flex-none rounded-lg object-contain mix-blend-darken sm:h-36 sm:w-36"
+                  />
+                )}
+                <span class="min-w-0">
+                  <span class="font-heading text-lg underline underline-offset-4">{pairedRecipe.translations[locale].title}</span>
+                  <span class="mt-1 block text-sm text-ink/75">{pairedRecipe.translations[locale].indexSummary}</span>
+                </span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </aside>
+    )}
 
     <div class="mt-10">
       <h2 class="m-0 mb-6 font-heading text-3xl">{t.steps}</h2>

@@ -24,6 +24,7 @@ export interface UiStrings {
   noResults: string;
   minutes: string;
   songLabel: string;
+  pairsWith: string;
   stepPhoto: string;
   photoPlaceholder: string;
   /** Display labels for measurement units (pcs is never shown). */
@@ -56,6 +57,7 @@ export const ui: Record<Locale, UiStrings> = {
     noResults: 'No recipes match your search.',
     minutes: 'min',
     songLabel: "This recipe's song",
+    pairsWith: 'Goes great with this',
     stepPhoto: 'Step photo',
     photoPlaceholder: 'Photo coming soon',
     units: {
@@ -96,6 +98,7 @@ export const ui: Record<Locale, UiStrings> = {
     noResults: 'Aramanızla eşleşen tarif yok.',
     minutes: 'dk',
     songLabel: 'Bu tarifin şarkısı',
+    pairsWith: 'Bununla çok iyi gider',
     stepPhoto: 'Adım fotoğrafı',
     photoPlaceholder: 'Fotoğraf yakında',
     units: {
@@ -136,6 +139,7 @@ export const ui: Record<Locale, UiStrings> = {
     noResults: 'Ninguna receta coincide con tu búsqueda.',
     minutes: 'min',
     songLabel: 'La canción de esta receta',
+    pairsWith: 'Combina muy bien con',
     stepPhoto: 'Foto del paso',
     photoPlaceholder: 'Foto próximamente',
     units: {
