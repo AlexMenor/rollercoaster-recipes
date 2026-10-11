@@ -41,6 +41,7 @@ const slugs = Object.fromEntries(
 
 const ingredientRows = recipe.ingredients.map((ing) => ({
   amount: ing.amount,
+  amountMax: ing.amountMax,
   unit: ing.unit,
   optional: ing.optional,
   group: ing.group?.[locale],
@@ -61,7 +62,7 @@ const jsonLd = {
   recipeYield: `${recipe.servings.default} servings`,
   recipeCuisine: recipe.origin?.en,
   recipeIngredient: recipe.ingredients.map(
-    (ing) => `${formatAmount(ing.amount, ing.unit, t.units)} ${ing.name[locale]}`,
+    (ing) => `${formatAmount(ing.amount, ing.unit, t.units, ing.amountMax)} ${ing.name[locale]}`,
   ),
   recipeInstructions: recipe.steps.map((step, i) => ({
     '@type': 'HowToStep',

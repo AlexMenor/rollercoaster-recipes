@@ -6,11 +6,13 @@ export const defaultLocale: Locale = 'en';
 
 export type Localized<T> = Record<Locale, T>;
 
-export type Unit = 'g' | 'kg' | 'ml' | 'l' | 'tsp' | 'tbsp' | 'cup' | 'pcs' | 'pinch';
+export type Unit = 'g' | 'kg' | 'ml' | 'l' | 'tsp' | 'dsp' | 'tbsp' | 'cup' | 'pcs' | 'pinch';
 
 export interface Ingredient {
   /** Base amount for `servings.default`. */
   amount: number;
+  /** Optional upper end of a quantity range, also for `servings.default`. */
+  amountMax?: number;
   unit: Unit;
   optional?: boolean;
   /** Optional subheading, e.g. "For the salad" / "For the topping". */

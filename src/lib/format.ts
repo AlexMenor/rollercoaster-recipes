@@ -27,7 +27,14 @@ export function formatQty(n: number): string {
 }
 
 /** 'pcs'-style units are not shown after the quantity; other units use their localized label. */
-export function formatAmount(amount: number, unit: Unit, unitLabels: Record<Unit, string>): string {
-  const qty = formatQty(amount);
+export function formatAmount(
+  amount: number,
+  unit: Unit,
+  unitLabels: Record<Unit, string>,
+  amountMax?: number,
+): string {
+  const qty = amountMax === undefined
+    ? formatQty(amount)
+    : `${formatQty(amount)}-${formatQty(amountMax)}`;
   return unit === 'pcs' ? qty : `${qty} ${unitLabels[unit]}`;
 }

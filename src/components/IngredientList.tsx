@@ -4,6 +4,7 @@ import type { Unit } from '../data/recipes/types';
 
 export interface IngredientRow {
   amount: number;
+  amountMax?: number;
   unit: Unit;
   optional?: boolean;
   group?: string;
@@ -72,7 +73,12 @@ export default function IngredientList({ ingredients, servings, labels }: Props)
               {groupHeading}
               <li className="flex items-baseline gap-3 border-b-[1.5px] border-dashed border-ink/20 py-2.5 text-[15px]">
                 <span className="min-w-[58px] flex-none font-heading text-base text-accent-700">
-                  {formatAmount(ing.amount * scale, ing.unit, labels.units)}
+                  {formatAmount(
+                    ing.amount * scale,
+                    ing.unit,
+                    labels.units,
+                    ing.amountMax === undefined ? undefined : ing.amountMax * scale,
+                  )}
                 </span>
                 <span className="flex-1">{ing.name}</span>
                 {ing.optional && (

@@ -5,9 +5,10 @@ import patlicanSalatasi from './patlican-salatasi';
 import pastaBolognese from './pasta-bolognese';
 import porridge from './porridge';
 import spanishPotatoOmelette from './spanish-potato-omelette';
+import turkishPilav from './turkish-pilav';
 import type { Locale, Recipe } from './types';
 
-export const recipes: Recipe[] = [bakedSweetPotatoes, carrotCake, orangeCake, patlicanSalatasi, pastaBolognese, porridge, spanishPotatoOmelette];
+export const recipes: Recipe[] = [bakedSweetPotatoes, carrotCake, orangeCake, patlicanSalatasi, pastaBolognese, porridge, spanishPotatoOmelette, turkishPilav];
 
 export function findRecipe(locale: Locale, slug: string): Recipe | undefined {
   return recipes.find((r) => r.translations[locale].slug === slug);
