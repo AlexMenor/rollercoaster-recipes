@@ -6,6 +6,11 @@ const recipe: Recipe = {
   createdAt: '2026-08-29',
   prepTime: 5,
   totalTime: 50,
+  cooking: {
+    method: 'oven',
+    temperatureC: 190,
+    timing: { kind: 'duration', minutes: 45, approximate: true },
+  },
   picture,
   servings: { default: 2, min: 1, max: 6 },
   spotifyTrackId: '7xB3hSztVbX6xFvQqEGKud',

@@ -6,6 +6,16 @@ const recipe: Recipe = {
   createdAt: '2026-08-30',
   prepTime: 20,
   totalTime: 110,
+  cooking: {
+    method: 'oven',
+    temperatureC: 180,
+    timing: { kind: 'duration', minutes: 30, maxMinutes: 40 },
+    note: {
+      en: 'Conventional top and bottom heat.',
+      tr: 'Alt-üst ısıtma.',
+      es: 'Calor arriba y abajo.',
+    },
+  },
   picture,
   servings: { default: 8, min: 4, max: 16 },
   spotifyTrackId: '5bGMMNxjvlledmzq9dItvf',

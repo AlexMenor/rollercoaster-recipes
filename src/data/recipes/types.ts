@@ -26,6 +26,16 @@ export interface Step {
   photo?: ImageMetadata;
 }
 
+export interface CookingInfo {
+  method: 'oven' | 'airFryer';
+  temperatureC: number;
+  /** A doneness checkpoint is distinct from an estimated cooking duration. */
+  timing:
+    | { kind: 'duration'; minutes: number; maxMinutes?: number; approximate?: boolean }
+    | { kind: 'check'; minutes: number };
+  note?: Localized<string>;
+}
+
 export interface Recipe {
   /** Stable id, e.g. 'patlican-salatasi'. */
   id: string;
@@ -35,6 +45,8 @@ export interface Recipe {
   prepTime: number;
   /** Minutes. */
   totalTime: number;
+  /** Optional cooking summary, independent of preparation time and servings. */
+  cooking?: CookingInfo;
   origin?: Localized<string>;
   picture?: ImageMetadata;
   servings: { default: number; min: number; max: number };

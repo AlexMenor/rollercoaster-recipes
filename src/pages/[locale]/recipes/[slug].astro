@@ -3,6 +3,7 @@ import { getImage } from 'astro:assets';
 import Layout from '../../../layouts/Layout.astro';
 import IngredientList from '../../../components/IngredientList';
 import RecipePicture from '../../../components/RecipePicture.astro';
+import CookingSummary from '../../../components/CookingSummary.astro';
 import SpotifyEmbed from '../../../components/SpotifyEmbed.astro';
 import { recipes } from '../../../data/recipes';
 import { locales, type Locale, type Recipe } from '../../../data/recipes/types';
@@ -118,7 +119,8 @@ const jsonLd = {
           class="w-full object-top mix-blend-darken md:h-full"
         />
       </div>
-      <div class="md:col-start-2 md:row-start-1">
+      <div class="flex min-w-0 flex-col gap-6 md:col-start-2 md:row-start-1">
+        {recipe.cooking && <CookingSummary cooking={recipe.cooking} locale={locale} />}
         <IngredientList
           client:load
           ingredients={ingredientRows}

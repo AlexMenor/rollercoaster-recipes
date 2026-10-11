@@ -28,6 +28,7 @@ Do not use em dashes or en dashes. Use commas, parentheses, colons, or regular h
 ## Recipe localization
 
 - When changing a recipe's ingredients, steps, title, summaries, or garnish details, update the English, Turkish, and Spanish versions together so their content remains equivalent.
+- Do not put fixed ingredient quantities or serving counts in preparation steps. Any stated ingredient amount must follow the selected servings. Until steps support dynamic amounts, refer to the adjustable ingredient list or omit the quantity. Relative proportions, cooking times, and temperatures can remain in the steps.
 
 ## Localized recipe URLs and SEO
 

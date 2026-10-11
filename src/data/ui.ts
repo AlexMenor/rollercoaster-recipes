@@ -10,6 +10,14 @@ export interface UiStrings {
   steps: string;
   prep: string;
   total: string;
+  cooking: string;
+  oven: string;
+  airFryer: string;
+  temperature: string;
+  cookingDuration: string;
+  firstCheck: string;
+  checkCookingAfter: string;
+  approximately: string;
   serves: string;
   back: string;
   optional: string;
@@ -34,6 +42,14 @@ export const ui: Record<Locale, UiStrings> = {
     steps: 'Steps',
     prep: 'Prep',
     total: 'Total',
+    cooking: 'Cooking',
+    oven: 'Oven',
+    airFryer: 'Air fryer',
+    temperature: 'Temperature',
+    cookingDuration: 'Cooking time',
+    firstCheck: 'First check',
+    checkCookingAfter: 'Check after {time}',
+    approximately: 'About',
     serves: 'Serves',
     back: 'All recipes',
     optional: 'optional',
@@ -66,6 +82,14 @@ export const ui: Record<Locale, UiStrings> = {
     steps: 'Adımlar',
     prep: 'Hazırlık',
     total: 'Toplam',
+    cooking: 'Pişirme',
+    oven: 'Fırın',
+    airFryer: 'Hava fritözü',
+    temperature: 'Sıcaklık',
+    cookingDuration: 'Pişirme süresi',
+    firstCheck: 'İlk kontrol',
+    checkCookingAfter: '{time} sonra kontrol edin',
+    approximately: 'Yaklaşık',
     serves: 'Porsiyon',
     back: 'Tüm tarifler',
     optional: 'isteğe bağlı',
@@ -98,6 +122,14 @@ export const ui: Record<Locale, UiStrings> = {
     steps: 'Pasos',
     prep: 'Preparación',
     total: 'Total',
+    cooking: 'Cocción',
+    oven: 'Horno',
+    airFryer: 'Freidora de aire',
+    temperature: 'Temperatura',
+    cookingDuration: 'Tiempo de cocción',
+    firstCheck: 'Primera comprobación',
+    checkCookingAfter: 'Comprobar a los {time}',
+    approximately: 'Aprox.',
     serves: 'Para',
     back: 'Todas las recetas',
     optional: 'opcional',

@@ -6,6 +6,11 @@ const recipe: Recipe = {
   createdAt: '2026-08-27',
   prepTime: 10,
   totalTime: 40,
+  cooking: {
+    method: 'oven',
+    temperatureC: 200,
+    timing: { kind: 'duration', minutes: 30, maxMinutes: 40 },
+  },
   origin: { en: 'Turkey', tr: 'Türkiye', es: 'Turquía' },
   picture,
   servings: { default: 4, min: 2, max: 8 },
