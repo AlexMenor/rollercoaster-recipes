@@ -47,6 +47,20 @@ const fullTitle = title ? `${title} · Rollercoaster Recipes` : 'Rollercoaster R
     <meta name="description" content={metaDescription} />
     <title>{fullTitle}</title>
 
+    {
+      import.meta.env.PROD && (
+        <script
+          is:inline
+          defer
+          src="https://cloud.umami.is/script.js"
+          data-website-id="cc7dc65a-a03d-42bb-b055-ddee3315b3e2"
+          data-domains="rollercoasterrecipes.com,www.rollercoasterrecipes.com"
+          data-exclude-search="true"
+          data-exclude-hash="true"
+        ></script>
+      )
+    }
+
     <link rel="canonical" href={canonical} />
     {
       locales.map((l) => (
