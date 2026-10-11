@@ -28,11 +28,12 @@ export function formatQty(n: number): string {
 
 /** 'pcs'-style units are not shown after the quantity; other units use their localized label. */
 export function formatAmount(
-  amount: number,
+  amount: number | undefined,
   unit: Unit,
   unitLabels: Record<Unit, string>,
   amountMax?: number,
 ): string {
+  if (amount === undefined) return '';
   const qty = amountMax === undefined
     ? formatQty(amount)
     : `${formatQty(amount)}-${formatQty(amountMax)}`;
